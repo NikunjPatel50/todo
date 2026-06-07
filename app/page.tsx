@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { insforge, type Todo } from "@/lib/insforge";
+import { getInsforge, type Todo } from "@/lib/insforge";
 
 function CheckIcon() {
   return (
@@ -54,7 +54,7 @@ export default function Home() {
     : 0;
 
   const fetchTodos = useCallback(async () => {
-    const { data, error: fetchError } = await insforge.database
+    const { data, error: fetchError } = await getInsforge().database
       .from("todos")
       .select()
       .order("created_at", { ascending: false });
@@ -80,7 +80,7 @@ export default function Home() {
     setSubmitting(true);
     setError(null);
 
-    const { data, error: insertError } = await insforge.database
+    const { data, error: insertError } = await getInsforge().database
       .from("todos")
       .insert([{ title: trimmed }])
       .select();
@@ -100,7 +100,7 @@ export default function Home() {
   }
 
   async function handleToggleCompletion(todo: Todo) {
-    const { data, error: updateError } = await insforge.database
+    const { data, error: updateError } = await getInsforge().database
       .from("todos")
       .update({ is_completed: !todo.is_completed })
       .eq("id", todo.id)
@@ -121,7 +121,7 @@ export default function Home() {
   }
 
   async function handleDeleteTask(id: string) {
-    const { error: deleteError } = await insforge.database
+    const { error: deleteError } = await getInsforge().database
       .from("todos")
       .delete()
       .eq("id", id);
