@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient, type InsForgeClient } from "@insforge/sdk";
+import { INSFORGE_ANON_KEY, INSFORGE_URL } from "@/lib/insforge-config";
 
 export type Todo = {
   id: string;
@@ -16,14 +17,10 @@ export function getInsforge(): InsForgeClient {
 
   const baseUrl =
     process.env.NEXT_PUBLIC_INSFORGE_URL ??
-    process.env.NEXT_PUBLIC_INSFORGE_BASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY;
-
-  if (!baseUrl || !anonKey) {
-    throw new Error(
-      "Missing InsForge configuration. Add NEXT_PUBLIC_INSFORGE_URL and NEXT_PUBLIC_INSFORGE_ANON_KEY to .env.local, then restart the dev server.",
-    );
-  }
+    process.env.NEXT_PUBLIC_INSFORGE_BASE_URL ??
+    INSFORGE_URL;
+  const anonKey =
+    process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY ?? INSFORGE_ANON_KEY;
 
   client = createClient({ baseUrl, anonKey });
   return client;
